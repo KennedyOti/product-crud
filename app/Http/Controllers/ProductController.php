@@ -10,7 +10,7 @@ class ProductController extends Controller
     // Fetch all products
     public function index()
     {
-        return response()->json(Product::all());
+        return response()->json(Product::all(), 200);
     }
 
     // Create a new product
@@ -24,30 +24,19 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create($validated);
+
         return response()->json($product, 201); // Created
     }
 
     // Fetch a specific product by ID
-    public function show($id)
+    public function show(Product $product)
     {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-
-        return response()->json($product);
+        return response()->json($product, 200);
     }
 
     // Update a product
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -57,20 +46,14 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return response()->json($product);
+        return response()->json($product, 200);
     }
 
     // Delete a product
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-
         $product->delete();
 
-        return response()->json(['message' => 'Product deleted successfully']);
+        return response()->json(['message' => 'Product deleted successfully'], 200);
     }
 }
